@@ -1,13 +1,13 @@
-"use client";
-import React, {useEffect} from "react";
+'use client';
+import React, { useEffect } from 'react';
 
-import {DataTable} from "primereact/datatable";
-import {Column} from "primereact/column";
-import axios from "axios";
-import {toast} from "react-hot-toast";
-import {useRouter} from "next/navigation";
-import {Dialog} from "primereact/dialog";
-import {Button} from "primereact/button";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
 import Image from 'next/image';
 import isValidURL from '../../../../../helpers/isUrlValid';
 
@@ -28,20 +28,22 @@ export default function CategoriesList() {
     // GET THE CATEGORIES FROM THE API
     function getCategories() {
         // GET THE TOKEN FROM THE LOCAL STORAGE
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
 
         axios.get(`${process.env.API_URL}/categories`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            },
+            }
         })
             .then(res => {
+                // Check if res.data.categories is an array, if not, set it to an empty array
+                let categories = Array.isArray(res.data?.categories) ? res.data.categories : [];
                 // Update the state
-                setCategories(res.data?.categories || []);
+                setCategories(categories);
             })
             .catch(error => {
-                toast.error(error?.response?.data?.message || "An error occurred while getting the categories.");
-            })
+                toast.error(error?.response?.data?.message || 'An error occurred while getting the categories.');
+            });
     }
 
     // EFFECT TO GET THE CATEGORIES
@@ -53,7 +55,7 @@ export default function CategoriesList() {
     // DELETE THE PACKAGE HANDLER
     const deleteHandler = async () => {
         //GET THE TOKEN
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
 
         await axios.delete(`${process.env.API_URL}/delete/category`, {
             headers: {
@@ -72,9 +74,9 @@ export default function CategoriesList() {
                 getCategories();
             })
             .catch(err => {
-                toast.error(err.response?.data?.message || "An error occurred while deleting the category.");
-            })
-    }
+                toast.error(err.response?.data?.message || 'An error occurred while deleting the category.');
+            });
+    };
 
     const footerContent = (
         <div>
@@ -82,7 +84,7 @@ export default function CategoriesList() {
                 label="No"
                 icon="pi pi-times"
                 onClick={() => setVisible(false)}
-                className="p-button-text"/>
+                className="p-button-text" />
             <Button
                 label="Yes"
                 icon="pi pi-check"
@@ -90,10 +92,10 @@ export default function CategoriesList() {
                     deleteHandler();
                 }}
                 style={{
-                    backgroundColor: "#dc3545",
-                    color: "#fff"
+                    backgroundColor: '#dc3545',
+                    color: '#fff'
                 }}
-                autoFocus/>
+                autoFocus />
         </div>
     );
 
@@ -101,13 +103,34 @@ export default function CategoriesList() {
         <>
             <DataTable
                 value={categories || []}
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 paginator={true}
                 rows={10}
                 rowsPerPageOptions={[5, 10, 20]}
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 emptyMessage="No categories found."
             >
+                <Column
+                    field="categoryImage"
+                    header="Category Image"
+                    body={(rowData) => {
+                        return (
+                            <Image
+                                src={isValidURL(rowData?.categoryImage) ? (rowData?.categoryImage) : '/not-found.jpg'}
+                                alt={rowData?.title}
+                                width={100}
+                                height={100}
+                                style={{
+                                    width: '50px',
+                                    height: '50px',
+                                    objectFit: 'cover',
+                                    borderRadius: '50%',
+                                    border: '2px solid #f1f1f1'
+                                }}
+                            />
+                        );
+                    }}
+                />
 
                 <Column
                     field="categoryName"
@@ -140,7 +163,7 @@ export default function CategoriesList() {
                                 <button
                                     className="editButton"
                                     onClick={() => {
-                                        router.push(`/categories/${rowData._id}`)
+                                        router.push(`/categories/${rowData._id}`);
                                     }}
                                 >
                                     Edit
@@ -155,15 +178,15 @@ export default function CategoriesList() {
                                     Delete
                                 </button>
                             </div>
-                        )
+                        );
                     }}
                 />
             </DataTable>
             <Dialog
                 header="Delete Category"
                 visible={visible}
-                position={"top"}
-                style={{width: '90%', maxWidth: '650px'}}
+                position={'top'}
+                style={{ width: '90%', maxWidth: '650px' }}
                 onHide={() => setVisible(false)}
                 footer={footerContent}
                 draggable={false}
@@ -176,8 +199,8 @@ export default function CategoriesList() {
             <Dialog
                 header="DETAILS"
                 visible={detailsVisible}
-                position={"center"}
-                style={{width: '90%', maxWidth: '650px'}}
+                position={'center'}
+                style={{ width: '90%', maxWidth: '650px' }}
                 onHide={() => setDetailsVisible(false)}
                 draggable={false}
                 resizable={false}
@@ -186,35 +209,44 @@ export default function CategoriesList() {
                     <div className="field col-12 relative">
                         <h4>Category Image</h4>
                         <Image
-                            src={selectedCategory?.image || '/not-found.jpg'}
+                            src={isValidURL(selectedCategory?.categoryImage) ? selectedCategory?.categoryImage : '/not-found.jpg'}
                             alt={selectedCategory?.title}
                             width={600}
                             height={300}
-                            style={{width: '100%', objectFit: 'contain'}}
+                            style={{ width: '100%', objectFit: 'contain' }}
                         />
                     </div>
-                    <div className="field col-12 relative">
-                        <h4>Category Title</h4>
-                        <p>{selectedCategory?.title}</p>
+                    <div className="field col-12 relative flex">
+                        <div className="field col-6">
+                            <h4>Category Name (Arabic)</h4>
+                            <p>{selectedCategory?.categoryName}</p>
+                        </div>
+                        <div className="field col-6">
+                            <h4>Category Name (English)</h4>
+                            <p>{selectedCategory?.categoryNameEn}</p>
+                        </div>
                     </div>
                     <div className="field col-12">
-                        <h4>Files</h4>
+                        <h4>Sub Categories</h4>
                         <div className="flex flex-row flex-wrap gap-2">
-                            {selectedCategory?.categoryMedia?.map((file, index) => {
+                            {selectedCategory?.subCategories?.map((file, index) => {
                                 return (
-                                    <Image
-                                        width={100}
-                                        height={100}
-                                        key={index}
-                                        src={isValidURL(file) ? file : '/not-found.jpg'}
-                                        alt={file}
-                                        style={{
-                                            width: '100px',
-                                            height: '100px',
-                                            objectFit: 'cover'
-                                        }}
-                                    />
-                                )
+                                    <div className={'flex flex-column gap-4'} key={file?._id}>
+                                        <Image
+                                            width={100}
+                                            height={100}
+                                            key={index}
+                                            src={isValidURL(file?.subCategoryImage) ? file?.subCategoryImage : '/not-found.jpg'}
+                                            alt={file}
+                                            style={{
+                                                width: '100px',
+                                                height: '100px',
+                                                objectFit: 'cover'
+                                            }}
+                                        />
+                                        <p>{file?.subCategoryNameEn} - ({file?.subCategoryName})</p>
+                                    </div>
+                                );
                             })}
                         </div>
                     </div>
@@ -222,5 +254,5 @@ export default function CategoriesList() {
             </Dialog>
 
         </>
-    )
+    );
 }

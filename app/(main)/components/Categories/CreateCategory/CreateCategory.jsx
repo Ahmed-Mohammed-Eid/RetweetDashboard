@@ -58,7 +58,7 @@ export default function CreateCategory() {
             }
         })
             .then(response => {
-                toast.success(response.data?.message || "Categories created successfully.");
+                toast.success(response.data?.message || "Category created successfully.");
                 setLoading(false);
             })
             .catch(error => {
@@ -78,7 +78,7 @@ export default function CreateCategory() {
                         id="categoryName"
                         type="text"
                         placeholder={"Enter the category name arabic"}
-                        value={form.categoryTitle}
+                        value={form.categoryName}
                         onChange={(e) => setForm({ ...form, categoryName: e.target.value })}
                     />
                 </div>
@@ -88,7 +88,7 @@ export default function CreateCategory() {
                         id="categoryNameEn"
                         type="text"
                         placeholder={"Enter the category name english"}
-                        value={form.categoryTitle}
+                        value={form.categoryNameEn}
                         onChange={(e) => setForm({ ...form, categoryNameEn: e.target.value })}
                     />
                 </div>

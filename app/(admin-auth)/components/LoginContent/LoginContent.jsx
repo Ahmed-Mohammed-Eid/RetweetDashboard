@@ -57,7 +57,7 @@ const LoginContent = () => {
         setLoading(true);
         // LOGIN
         axios
-            .post(`${process.env.API_URL}/user/login`, {
+            .post(`${process.env.API_URL}/admin/login`, {
                 username: username,
                 password: password,
             })
@@ -65,14 +65,15 @@ const LoginContent = () => {
                 setLoading(false);
                 // SAVE TOKEN IN LOCAL STORAGE AND COOKIES AND THE ROLE OF THE USER
                 localStorage.setItem("token", res.data.token);
-                localStorage.setItem("role", res.data?.role);
+                localStorage.setItem("role", res.data?.admin?.role);
 
                 // SET THE COOKIES
                 document.cookie = `token=${res.data.token}; path=/`;
-                document.cookie = `role=${res.data?.role}; path=/`;
+                document.cookie = `role=${res.data?.admin?.role}; path=/`;
 
-                if(res.data?.role === "admin"){
+                if(res.data?.admin?.role === "admin"){
                     // REDIRECT TO HOME PAGE
+                    toast.success("Login Successful");
                     router.push("/");
                 }else{
                     toast.error("You are not authorized to access this page");

@@ -26,17 +26,18 @@ export default function EditSubCategory({subCategoryId}) {
         // GET THE TOKEN FROM THE COOKIES
         const token = localStorage.getItem("token");
 
-        axios.get(`${process.env.API_URL}/get/category?categoryId=${id}`, {
+        axios.get(`${process.env.API_URL}/sub/category?subCategoryId=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
         })
             .then(res => {
-                const category = res.data.category;
+                const subCategory = res.data;
+                console.log(subCategory);
                 setForm({
-                    subCategoryName: category?.categoryName,
-                    subCategoryNameEn: category?.categoryNameEn,
-                    categoryId: category?.categoryId,
+                    subCategoryName: subCategory?.subCategory?.subCategoryName,
+                    subCategoryNameEn: subCategory?.subCategory?.subCategoryNameEn,
+                    mainCategoryId: subCategory?.subCategory?.mainCategoryId,
                     files: []
                 })
             })
@@ -45,8 +46,36 @@ export default function EditSubCategory({subCategoryId}) {
             })
     }
 
+    function getCategories() {
+        // GET THE TOKEN FROM THE LOCAL STORAGE
+        const token = localStorage.getItem("token");
+
+        axios.get(`${process.env.API_URL}/categories`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+            .then(res => {
+                const categories = res.data?.categories || [];
+                // LOOP THROUGH THE CATEGORIES AND FORMAT THEM AS {label: "categoryName", value: "_id"}
+                const formattedCategories = categories.map(category => {
+                    return {
+                        label: `${category?.categoryNameEn} ( ${category.categoryName} )`,
+                        value: category._id
+                    }
+                });
+                // Update the state
+                setCategories(formattedCategories);
+            })
+            .catch(error => {
+                toast.error(error?.response?.data?.message || "An error occurred while getting the categories.");
+            })
+    }
+
+
     // EFFECT TO SET THE FORM VALUES
     useEffect(() => {
+        getCategories();
         getSubCategory(subCategoryId);
     }, [subCategoryId]);
 
@@ -60,7 +89,7 @@ export default function EditSubCategory({subCategoryId}) {
 
 
         // VALIDATE THE FORM
-        if (!form.categoryName || !form.categoryNameEn) {
+        if (!form.subCategoryName || !form.subCategoryNameEn) {
             toast.error("Please fill all the fields.");
             return;
         }
@@ -77,8 +106,8 @@ export default function EditSubCategory({subCategoryId}) {
 
         // APPEND THE TITLE
         // APPEND THE TITLE
-        formData.append("subCategoryName", form.categoryName);
-        formData.append("subCategoryNameEn", form.categoryNameEn);
+        formData.append("subCategoryName", form.subCategoryName);
+        formData.append("subCategoryNameEn", form.subCategoryNameEn);
         formData.append("mainCategoryId", form.mainCategoryId);
         formData.append("subCategoryId", subCategoryId);
 
@@ -88,7 +117,7 @@ export default function EditSubCategory({subCategoryId}) {
         }
 
         // SEND THE REQUEST
-        axios.put(`${process.env.API_URL}/edit/category`, formData, {
+        axios.put(`${process.env.API_URL}/edit/sub/category`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -106,7 +135,7 @@ export default function EditSubCategory({subCategoryId}) {
 
     return (
         <div className={"card mb-0"}>
-            <h1 className={"text-2xl font-bold mb-4 uppercase"}>Edit Category</h1>
+            <h1 className={"text-2xl font-bold mb-4 uppercase"}>Edit Sub Category</h1>
             <form className="grid formgrid p-fluid" onSubmit={editSubCategory}>
                 <div className="field col-12">
                     <label htmlFor="mainCategoryId">Main Category</label>

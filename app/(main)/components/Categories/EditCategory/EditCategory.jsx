@@ -7,7 +7,7 @@ import {ProgressSpinner} from "primereact/progressspinner";
 import {toast} from "react-hot-toast";
 import axios from "axios";
 
-export default function EditCategory({categoryId }) {
+export default function EditCategory({categoryId}) {
 
     // LOADING STATE
     const [loading, setLoading] = useState(false);
@@ -109,7 +109,7 @@ export default function EditCategory({categoryId }) {
                         id="categoryName"
                         type="text"
                         placeholder={"Enter the category name arabic"}
-                        value={form.categoryTitle}
+                        value={form.categoryName}
                         onChange={(e) => setForm({ ...form, categoryName: e.target.value })}
                     />
                 </div>
@@ -119,7 +119,7 @@ export default function EditCategory({categoryId }) {
                         id="categoryNameEn"
                         type="text"
                         placeholder={"Enter the category name english"}
-                        value={form.categoryTitle}
+                        value={form.categoryNameEn}
                         onChange={(e) => setForm({ ...form, categoryNameEn: e.target.value })}
                     />
                 </div>

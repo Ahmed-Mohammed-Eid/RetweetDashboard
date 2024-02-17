@@ -1,5 +1,5 @@
 "use client";
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomFileUpload from "../../Layout/customFileUpload/customFileUpload";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
@@ -46,8 +46,8 @@ export default function CreateSubCategory() {
         setLoading(true);
 
         // APPEND THE TITLE
-        formData.append("subCategoryName", form.categoryName);
-        formData.append("subCategoryNameEn", form.categoryNameEn);
+        formData.append("subCategoryName", form.subCategoryName);
+        formData.append("subCategoryNameEn", form.subCategoryNameEn);
         formData.append("mainCategoryId", form.mainCategoryId);
 
         // APPEND THE FILES
@@ -71,6 +71,37 @@ export default function CreateSubCategory() {
             })
     }
 
+    function getCategories() {
+        // GET THE TOKEN FROM THE LOCAL STORAGE
+        const token = localStorage.getItem("token");
+
+        axios.get(`${process.env.API_URL}/categories`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+            .then(res => {
+                const categories = res.data?.categories || [];
+                // LOOP THROUGH THE CATEGORIES AND FORMAT THEM AS {label: "categoryName", value: "_id"}
+                const formattedCategories = categories.map(category => {
+                    return {
+                        label: `${category?.categoryNameEn} ( ${category.categoryName} )`,
+                        value: category._id
+                    }
+                });
+                // Update the state
+                setCategories(formattedCategories);
+            })
+            .catch(error => {
+                toast.error(error?.response?.data?.message || "An error occurred while getting the categories.");
+            })
+    }
+
+    // EFFECT TO GET THE CATEGORIES
+    useEffect(() => {
+        getCategories();
+    }, []);
+
 
     return (
         <div className={"card mb-0"}>
@@ -80,7 +111,7 @@ export default function CreateSubCategory() {
                     <label htmlFor="mainCategoryId">Main Category</label>
                     <Dropdown
                         id="mainCategoryId"
-                        value={form.mainCategoryId}
+                        value={form?.mainCategoryId}
                         options={categories || []}
                         onChange={(e) => setForm({...form, mainCategoryId: e.value})}
                         placeholder={"Select the main category"}

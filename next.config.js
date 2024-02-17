@@ -18,6 +18,18 @@ const nextConfig = {
                 hostname: 'alderwaza.kportals.net'
             },
             {
+                protocol: 'https',
+                hostname: 'api.retweet.com'
+            },
+            {
+                protocol: 'http',
+                hostname: 'api.retweet.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'localhost'
+            },
+            {
                 protocol: 'http',
                 hostname: 'localhost'
             }

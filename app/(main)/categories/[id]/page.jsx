@@ -7,6 +7,6 @@ export default async function EditCategoryPage({params}) {
     const { id } = params
 
     return (
-        <EditCategory sectionId={id} />
+        <EditCategory categoryId={id} />
     );
 }
