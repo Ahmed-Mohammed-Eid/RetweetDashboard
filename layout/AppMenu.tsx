@@ -5,32 +5,38 @@ import AppMenuitem from './AppMenuitem';
 import { MenuProvider } from './context/menucontext';
 import { AppMenuItem } from '../types/types';
 
-const AppMenu = () => {
+const AppMenu = ({lang, dictionary}: any) => {
 
     const model: AppMenuItem[] = [
         {
-            label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+            label: dictionary.sidebar.home.title,
+            items: [{ label: dictionary.sidebar.home.dashboard, icon: 'pi pi-fw pi-home', to: '/' }]
         },
         {
-            label: 'Categories',
+            label: dictionary.sidebar.categories.title,
             items: [
-                {label: 'Categories List', icon: 'pi pi-fw pi-list', to: '/categories'},
-                    {label: 'Add Category', icon: 'pi pi-fw pi-plus', to: '/categories/create'}
+                {label: dictionary.sidebar.categories.list, icon: 'pi pi-fw pi-list', to: '/categories'},
+                    {label: dictionary.sidebar.categories.create, icon: 'pi pi-fw pi-plus', to: '/categories/create'}
             ]
         },
         {
-            label: 'Media',
+            label: dictionary.sidebar.subcategories.title,
             items: [
-                {label: 'SubCategories List', icon: 'pi pi-fw pi-list', to: '/subcategories'},
-                {label: 'Add SubCategory', icon: 'pi pi-fw pi-plus', to: '/subcategories/create'}
+                {label: dictionary.sidebar.subcategories.list, icon: 'pi pi-fw pi-list', to: '/subcategories'},
+                {label: dictionary.sidebar.subcategories.create, icon: 'pi pi-fw pi-plus', to: '/subcategories/create'}
             ]
         },
         {
-            label: 'Settings',
+            label: dictionary.sidebar.items.title,
+            items: [
+                {label: dictionary.sidebar.items.create, icon: 'pi pi-fw pi-plus', to: '/items/create'}
+            ]
+        },
+        {
+            label: dictionary.sidebar.settings.title,
             items: [
                 {
-                    label: 'LogOut', icon: 'pi pi-sign-out', to: '/login', command: () => {
+                    label: dictionary.sidebar.settings.logout, icon: lang === 'en' ? 'pi pi-sign-out' : 'pi pi-sign-in', to: '/login', command: () => {
                         // Clear local storage
                         localStorage.clear();
                         // Clear Cookies
@@ -48,8 +54,8 @@ const AppMenu = () => {
     ];
 
     return (
-        <MenuProvider>
-            <ul className="layout-menu">
+        <MenuProvider dictionary={dictionary} lang={lang}>
+            <ul className="layout-menu" dir={lang === "ar" ? 'rtl' : 'ltr'}>
                 {model.map((item, i) => {
                     return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
                 })}

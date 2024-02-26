@@ -3,7 +3,7 @@ import { ChildContainerProps, MenuContextProps } from '../../types/types';
 
 export const MenuContext = createContext({} as MenuContextProps);
 
-export const MenuProvider = ({ children }: ChildContainerProps) => {
+export const MenuProvider = ({ children, dictionary, lang }: ChildContainerProps) => {
     const [activeMenu, setActiveMenu] = useState('');
 
     const value = {

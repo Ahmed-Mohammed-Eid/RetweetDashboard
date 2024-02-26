@@ -9,8 +9,14 @@ import { classNames } from 'primereact/utils';
 import React, { useContext, useEffect, useState } from 'react';
 import { AppConfigProps, LayoutConfig, LayoutState } from '../types/types';
 import { LayoutContext } from './context/layoutcontext';
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const AppConfig = (props: AppConfigProps) => {
+
+    // GET THE CURRENT PATH
+    const pathname = usePathname();
+
     const [scales] = useState([12, 13, 14, 15, 16]);
     const { layoutConfig, setLayoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
     const { setRipple, changeTheme } = useContext(PrimeReactContext);
@@ -54,10 +60,41 @@ const AppConfig = (props: AppConfigProps) => {
         document.documentElement.style.fontSize = layoutConfig.scale + 'px';
     };
 
+
+    // CUSTOM FUNCTION TO SWITCH THE LANGUAGE
+    const handleLanguageChange = (lang: any) => {
+        // SET THE LANGUAGE TO THE LOCAL STORAGE
+        localStorage.setItem('language', lang);
+        // SET THE LANGUAGE TO THE COOKIES
+        document.cookie = `language=${lang}`;
+        // get the path without the language
+        const parts = pathname.split("/");
+        parts[1] = lang;
+        // redirect to the new path
+        window.location.href = parts.join("/");
+    };
+
     useEffect(() => {
         applyScale();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [layoutConfig.scale]);
+
+    // GET THE LANGUAGE FROM THE BROWSER AND SET IT TO THE LAYOUT CONFIG
+    useEffect(() => {
+        // GET IT FROM THE LOCAL STORAGE
+        const language = localStorage.getItem('language') || 'en';
+        setLayoutConfig((prevState) => ({ ...prevState, language }));
+    }, [setLayoutConfig]);
+
+    // SET THE LANGUAGE TO THE LOCAL STORAGE AND THE COOKIES WHEN THE LANGUAGE CHANGES AND THE PAGE IS LOADED
+    useEffect(() => {
+        // GET THE LANGUAGE FROM THE LOCAL STORAGE
+        const language = localStorage.getItem('language') || 'en';
+        // SET THE LANGUAGE TO THE LOCAL STORAGE
+        localStorage.setItem('language', language);
+        // SET THE LANGUAGE TO THE COOKIES
+        document.cookie = `language=${language}`;
+    }, []);
 
     return (
         <>
@@ -70,25 +107,79 @@ const AppConfig = (props: AppConfigProps) => {
             <Sidebar visible={layoutState.configSidebarVisible} onHide={onConfigSidebarHide} position="right" className="layout-config-sidebar w-20rem">
                 {!props.simple && (
                     <>
+                        <h5>{'LANGUAGE'}</h5>
+                        <div className="flex">
+                            <div className="field-radiobutton flex-1">
+                                <RadioButton name="language" value={'en'} checked={layoutConfig.language === 'en'}
+                                             onChange={(e) => {
+                                                 // SET THE LANGUAGE TO THE LAYOUT CONFIG
+                                                 setLayoutConfig((prevState) => ({
+                                                     ...prevState,
+                                                     language: e.value
+                                                 }));
+                                                 // GO TO THE /en/ ROUTE
+                                                 handleLanguageChange('en');
+                                                 // window.location.href = '/en';
+                                             }}
+                                             inputId="en"
+                                />
+                                <label htmlFor="en">
+                                    <Image src={'/assets/en.svg'} alt={'en language'} width={22} height={16} />
+                                </label>
+                            </div>
+                            <div className="field-radiobutton flex-1">
+                                <RadioButton name="language" value={'ar'} checked={layoutConfig.language === 'ar'}
+                                             onChange={(e) => {
+                                                 // SET THE LANGUAGE TO THE LOCAL STORAGE
+                                                 localStorage.setItem('language', e.value);
+                                                 // SET THE LANGUAGE TO THE COOKIES
+                                                 document.cookie = `language=${e.value}`;
+                                                 // SET THE LANGUAGE TO THE LAYOUT CONFIG
+                                                 setLayoutConfig((prevState) => ({
+                                                     ...prevState,
+                                                     language: e.value
+                                                 }));
+                                                 // GO TO THE /ar/ ROUTE
+                                                 handleLanguageChange('ar');
+                                                 // window.location.href = '/ar';
+                                             }}
+                                             inputId="ar"
+                                />
+                                <label htmlFor="ar">
+                                    <Image src={'/assets/ar.svg'} alt={'ar language'} width={22} height={16} />
+                                </label>
+                            </div>
+                        </div>
+
                         <h5>Scale</h5>
                         <div className="flex align-items-center">
-                            <Button icon="pi pi-minus" type="button" onClick={decrementScale} rounded text className="w-2rem h-2rem mr-2" disabled={layoutConfig.scale === scales[0]}></Button>
+                            <Button icon="pi pi-minus" type="button" onClick={decrementScale} rounded text
+                                    className="w-2rem h-2rem mr-2" disabled={layoutConfig.scale === scales[0]}></Button>
                             <div className="flex gap-2 align-items-center">
                                 {scales.map((item) => {
-                                    return <i className={classNames('pi pi-circle-fill', { 'text-primary-500': item === layoutConfig.scale, 'text-300': item !== layoutConfig.scale })} key={item}></i>;
+                                    return <i className={classNames('pi pi-circle-fill', {
+                                        'text-primary-500': item === layoutConfig.scale,
+                                        'text-300': item !== layoutConfig.scale
+                                    })} key={item}></i>;
                                 })}
                             </div>
-                            <Button icon="pi pi-plus" type="button" onClick={incrementScale} rounded text className="w-2rem h-2rem ml-2" disabled={layoutConfig.scale === scales[scales.length - 1]}></Button>
+                            <Button icon="pi pi-plus" type="button" onClick={incrementScale} rounded text
+                                    className="w-2rem h-2rem ml-2"
+                                    disabled={layoutConfig.scale === scales[scales.length - 1]}></Button>
                         </div>
 
                         <h5>Menu Type</h5>
                         <div className="flex">
                             <div className="field-radiobutton flex-1">
-                                <RadioButton name="menuMode" value={'static'} checked={layoutConfig.menuMode === 'static'} onChange={(e) => changeMenuMode(e)} inputId="mode1"></RadioButton>
+                                <RadioButton name="menuMode" value={'static'}
+                                             checked={layoutConfig.menuMode === 'static'}
+                                             onChange={(e) => changeMenuMode(e)} inputId="mode1"></RadioButton>
                                 <label htmlFor="mode1">Static</label>
                             </div>
                             <div className="field-radiobutton flex-1">
-                                <RadioButton name="menuMode" value={'overlay'} checked={layoutConfig.menuMode === 'overlay'} onChange={(e) => changeMenuMode(e)} inputId="mode2"></RadioButton>
+                                <RadioButton name="menuMode" value={'overlay'}
+                                             checked={layoutConfig.menuMode === 'overlay'}
+                                             onChange={(e) => changeMenuMode(e)} inputId="mode2"></RadioButton>
                                 <label htmlFor="mode2">Overlay</label>
                             </div>
                         </div>
@@ -96,39 +187,53 @@ const AppConfig = (props: AppConfigProps) => {
                         <h5>Input Style</h5>
                         <div className="flex">
                             <div className="field-radiobutton flex-1">
-                                <RadioButton name="inputStyle" value={'outlined'} checked={layoutConfig.inputStyle === 'outlined'} onChange={(e) => changeInputStyle(e)} inputId="outlined_input"></RadioButton>
+                                <RadioButton name="inputStyle" value={'outlined'}
+                                             checked={layoutConfig.inputStyle === 'outlined'}
+                                             onChange={(e) => changeInputStyle(e)}
+                                             inputId="outlined_input"></RadioButton>
                                 <label htmlFor="outlined_input">Outlined</label>
                             </div>
                             <div className="field-radiobutton flex-1">
-                                <RadioButton name="inputStyle" value={'filled'} checked={layoutConfig.inputStyle === 'filled'} onChange={(e) => changeInputStyle(e)} inputId="filled_input"></RadioButton>
+                                <RadioButton name="inputStyle" value={'filled'}
+                                             checked={layoutConfig.inputStyle === 'filled'}
+                                             onChange={(e) => changeInputStyle(e)} inputId="filled_input"></RadioButton>
                                 <label htmlFor="filled_input">Filled</label>
                             </div>
                         </div>
 
                         <h5>Ripple Effect</h5>
-                        <InputSwitch checked={layoutConfig.ripple as boolean} onChange={(e) => changeRipple(e)}></InputSwitch>
+                        <InputSwitch checked={layoutConfig.ripple as boolean}
+                                     onChange={(e) => changeRipple(e)}></InputSwitch>
                     </>
                 )}
                 <h5>Bootstrap</h5>
                 <div className="grid">
                     <div className="col-3">
-                        <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-light-blue', 'light')}>
-                            <img src="/layout/images/themes/bootstrap4-light-blue.svg" className="w-2rem h-2rem" alt="Bootstrap Light Blue" />
+                        <button className="p-link w-2rem h-2rem"
+                                onClick={() => _changeTheme('bootstrap4-light-blue', 'light')}>
+                            <img src="/layout/images/themes/bootstrap4-light-blue.svg" className="w-2rem h-2rem"
+                                 alt="Bootstrap Light Blue" />
                         </button>
                     </div>
                     <div className="col-3">
-                        <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-light-purple', 'light')}>
-                            <img src="/layout/images/themes/bootstrap4-light-purple.svg" className="w-2rem h-2rem" alt="Bootstrap Light Purple" />
+                        <button className="p-link w-2rem h-2rem"
+                                onClick={() => _changeTheme('bootstrap4-light-purple', 'light')}>
+                            <img src="/layout/images/themes/bootstrap4-light-purple.svg" className="w-2rem h-2rem"
+                                 alt="Bootstrap Light Purple" />
                         </button>
                     </div>
                     <div className="col-3">
-                        <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-dark-blue', 'dark')}>
-                            <img src="/layout/images/themes/bootstrap4-dark-blue.svg" className="w-2rem h-2rem" alt="Bootstrap Dark Blue" />
+                        <button className="p-link w-2rem h-2rem"
+                                onClick={() => _changeTheme('bootstrap4-dark-blue', 'dark')}>
+                            <img src="/layout/images/themes/bootstrap4-dark-blue.svg" className="w-2rem h-2rem"
+                                 alt="Bootstrap Dark Blue" />
                         </button>
                     </div>
                     <div className="col-3">
-                        <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-dark-purple', 'dark')}>
-                            <img src="/layout/images/themes/bootstrap4-dark-purple.svg" className="w-2rem h-2rem" alt="Bootstrap Dark Purple" />
+                        <button className="p-link w-2rem h-2rem"
+                                onClick={() => _changeTheme('bootstrap4-dark-purple', 'dark')}>
+                            <img src="/layout/images/themes/bootstrap4-dark-purple.svg" className="w-2rem h-2rem"
+                                 alt="Bootstrap Dark Purple" />
                         </button>
                     </div>
                 </div>
@@ -136,18 +241,23 @@ const AppConfig = (props: AppConfigProps) => {
                 <h5>Material Design</h5>
                 <div className="grid">
                     <div className="col-3">
-                        <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('md-light-indigo', 'light')}>
-                            <img src="/layout/images/themes/md-light-indigo.svg" className="w-2rem h-2rem" alt="Material Light Indigo" />
+                        <button className="p-link w-2rem h-2rem"
+                                onClick={() => _changeTheme('md-light-indigo', 'light')}>
+                            <img src="/layout/images/themes/md-light-indigo.svg" className="w-2rem h-2rem"
+                                 alt="Material Light Indigo" />
                         </button>
                     </div>
                     <div className="col-3">
-                        <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('md-light-deeppurple', 'light')}>
-                            <img src="/layout/images/themes/md-light-deeppurple.svg" className="w-2rem h-2rem" alt="Material Light DeepPurple" />
+                        <button className="p-link w-2rem h-2rem"
+                                onClick={() => _changeTheme('md-light-deeppurple', 'light')}>
+                            <img src="/layout/images/themes/md-light-deeppurple.svg" className="w-2rem h-2rem"
+                                 alt="Material Light DeepPurple" />
                         </button>
                     </div>
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('md-dark-indigo', 'dark')}>
-                            <img src="/layout/images/themes/md-dark-indigo.svg" className="w-2rem h-2rem" alt="Material Dark Indigo" />
+                            <img src="/layout/images/themes/md-dark-indigo.svg" className="w-2rem h-2rem"
+                                 alt="Material Dark Indigo" />
                         </button>
                     </div>
                     <div className="col-3">

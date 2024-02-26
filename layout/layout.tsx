@@ -17,7 +17,7 @@ import { ChildContainerProps, LayoutState, AppTopbarRef } from "../types/types";
 import { usePathname, useSearchParams } from "next/navigation";
 
 
-const Layout = ({ children }: ChildContainerProps) => {
+const Layout = ({ children, lang, dictionary }: ChildContainerProps) => {
   const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
   const { setRipple } = useContext(PrimeReactContext);
   const topbarRef = useRef<AppTopbarRef>(null);
@@ -146,12 +146,12 @@ const Layout = ({ children }: ChildContainerProps) => {
       <div className={containerClass}>
         <AppTopbar ref={topbarRef} />
         <div ref={sidebarRef} className="layout-sidebar">
-          <AppSidebar />
+          <AppSidebar lang={lang} dictionary={dictionary} />
         </div>
         <div className="layout-main-container">
           <div className="layout-main">{children}</div>
         </div>
-        <AppConfig />
+        <AppConfig lang={lang} dictionary={dictionary} />
         <div className="layout-mask"></div>
       </div>
     </React.Fragment>

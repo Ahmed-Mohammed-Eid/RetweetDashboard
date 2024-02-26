@@ -1,7 +1,7 @@
 import AppMenu from './AppMenu';
 
-const AppSidebar = () => {
-    return <AppMenu />;
+const AppSidebar = ({lang, dictionary} : any) => {
+    return <AppMenu lang={lang} dictionary={dictionary} />;
 };
 
 export default AppSidebar;

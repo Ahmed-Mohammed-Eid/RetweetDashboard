@@ -36,6 +36,7 @@ export type LayoutConfig = {
     colorScheme: string;
     theme: string;
     scale: number;
+    language: string;
 };
 
 export interface LayoutContextProps {
@@ -55,6 +56,8 @@ export interface MenuContextProps {
 /* AppConfig Types */
 export interface AppConfigProps {
     simple?: boolean;
+    lang: string;
+    dictionary: any;
 }
 
 /* AppTopbar Types */

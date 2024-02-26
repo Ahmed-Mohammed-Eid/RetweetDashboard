@@ -27,6 +27,8 @@ import { Demo, LayoutType, SortOrderType, CustomEvent, ChartDataState, ChartOpti
 
 type ChildContainerProps = {
     children: ReactNode;
+    dictionary: any;
+    lang: string;
 };
 
 export type {
