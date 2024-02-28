@@ -33,6 +33,14 @@ const AppMenu = ({lang, dictionary}: any) => {
             ]
         },
         {
+            label: dictionary.sidebar.ads.title,
+            items: [
+                {label: dictionary.sidebar.ads.list, icon: 'pi pi-fw pi-list', to: '/ads'},
+                {label: dictionary.sidebar.ads.carouselAds, icon: 'pi pi-fw pi-plus', to: '/ads/carousel'},
+                {label: dictionary.sidebar.ads.create, icon: 'pi pi-fw pi-plus', to: '/ads/create'}
+            ]
+        },
+        {
             label: dictionary.sidebar.settings.title,
             items: [
                 {

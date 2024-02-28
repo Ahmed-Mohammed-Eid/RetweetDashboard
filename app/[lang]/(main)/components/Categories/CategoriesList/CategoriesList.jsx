@@ -20,8 +20,8 @@ export default function CategoriesList({lang}) {
     //STATE FOR THE CATEGORIES
     const [categories, setCategories] = React.useState([]);
     const [visible, setVisible] = React.useState(false);
-    const [detailsVisible, setDetailsVisible] = React.useState(false);
     const [categoryIdToDelete, setCategoryIdToDelete] = React.useState(null);
+    const [detailsVisible, setDetailsVisible] = React.useState(false);
     const [selectedCategory, setSelectedCategory] = React.useState(null);
 
 
@@ -102,8 +102,8 @@ export default function CategoriesList({lang}) {
     return (
         <>
             <DataTable
-                dir={lang === 'en' ? 'ltr' : 'rtl'}
                 value={categories || []}
+                dir={lang === 'en' ? 'ltr' : 'rtl'}
                 style={{ width: '100%' }}
                 paginator={true}
                 rows={10}
