@@ -6,6 +6,7 @@ import {Button} from "primereact/button";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {toast} from "react-hot-toast";
 import axios from "axios";
+import { Dropdown } from 'primereact/dropdown';
 
 export default function CreateCategory({lang}) {
 
@@ -16,7 +17,8 @@ export default function CreateCategory({lang}) {
     const [form, setForm] = useState({
         categoryName: "",
         categoryNameEn: "",
-        files: []
+        files: [],
+        formType: ""
     });
 
     // HANDLERS
@@ -45,6 +47,7 @@ export default function CreateCategory({lang}) {
         // APPEND THE TITLE
         formData.append("categoryName", form.categoryName);
         formData.append("categoryNameEn", form.categoryNameEn);
+        formData.append("formType", form.formType);
 
         // APPEND THE FILES
         for (let i = 0; i < form.files.length; i++) {
@@ -94,6 +97,82 @@ export default function CreateCategory({lang}) {
                         onChange={(e) => setForm({ ...form, categoryNameEn: e.target.value })}
                     />
                 </div>
+
+                <div className="col-12 mb-2 lg:mb-2" dir={'ltr'}>
+                    <label className={"mb-2 block"} htmlFor={"formType"} dir={lang === "en" ? 'ltr' : 'rtl'}>
+                        {lang === 'en' ? 'Form Type' : 'نوع النموذج'}
+                    </label>
+                    <Dropdown
+                        id={"formType"}
+                        value={form.formType}
+                        options={[
+                            {
+                                label: lang === 'en' ? 'Cars' : 'سيارات',
+                                value: 'cars'
+                            },
+                            {
+                                label: lang === 'en' ? 'Real Estate' : 'عقارات',
+                                value: 'real-estate'
+                            },
+                            {
+                                label: lang === 'en' ? 'Mobiles & Tablets' : 'موبايلات وتابلت',
+                                value: 'mobiles-tablets'
+                            },
+                            {
+                                label: lang === 'en' ? 'Video Games' : 'ألعاب فيديو',
+                                value: 'video-games'
+                            },
+                            {
+                                label: lang === 'en' ? 'Laptops & Computers' : 'لابتوبات وكمبيوترات',
+                                value: 'laptops-computers' },
+                            {
+                                label: lang === 'en' ? 'Home Appliances & Electronics' : 'أجهزة منزلية وإلكترونيات',
+                                value: 'home-appliances-electronics' },
+                            {
+                                label: lang === 'en' ? 'Home & Garden' : 'المنزل والحديقة',
+                                value: 'home-garden' },
+                            {
+                                label: lang === 'en' ? 'Jobs' : 'وظائف',
+                                value: 'jobs'
+                            },
+                            {
+                                label: lang === 'en' ? 'Clothing & Accessories' : 'ملابس وإكسسوارات',
+                                value: 'clothing-accessories' },
+                            {
+                                label: lang === 'en' ? 'Children supplies' : 'مستلزمات الأطفال',
+                                value: 'children-supplies' },
+                            {
+                                label: lang === 'en' ? 'Services' : 'خدمات',
+                                value: 'services' },
+                            {
+                                label: lang === 'en' ? 'Food & Nutritions' : 'طعام وتغذية',
+                                value: 'food-nutritions' },
+                            {
+                                label: lang === 'en' ? 'Education & Training' : 'تعليم وتدريب',
+                                value: 'education-training' },
+                            {
+                                label: lang === 'en' ? 'Books & Hobbies' : 'كتب وهوايات',
+                                value: 'books-hobbies' },
+                            {
+                                label: lang === 'en' ? 'Animals' : 'حيوانات',
+                                value: 'animals'
+                            },
+                            {
+                                label: lang === 'en' ? 'Sports & Fitness' : 'رياضة ولياقة',
+                                value: 'sports-fitness' },
+                            {
+                                label: lang === 'en' ? 'Companies & Office Tools' : 'شركات وأدوات مكتبية',
+                                value: 'companies-office-tools' },
+                            {
+                                label: lang === 'en' ? 'Home &Garden' : 'المنزل والحديقة',
+                                value: 'home-garden'
+                            },
+                        ]}
+                        onChange={(e) => setForm({ ...form, formType: e.value })}
+                        placeholder={lang === 'en' ? 'Select the form type' : 'اختر نوع النموذج'}
+                    />
+                </div>
+
                 <div className="col-12 mb-2 lg:mb-2" dir={'ltr'}>
                     <label className={"mb-2 block"} htmlFor="male-image" dir={lang === "en" ? 'ltr' : 'rtl'}>
                         {lang === 'en' ? 'Category Image' : 'صورة التصنيف'}

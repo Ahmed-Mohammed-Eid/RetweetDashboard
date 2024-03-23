@@ -4,6 +4,10 @@
       "title": "HOME",
       "dashboard": "Dashboard"
     },
+    "listings": {
+      "title": "LISTINGS",
+      "list": "Listings List"
+    },
     "categories": {
       "title": "CATEGORIES",
       "list": "Category List",

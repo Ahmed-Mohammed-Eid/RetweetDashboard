@@ -10,34 +10,40 @@ const AppMenu = ({lang, dictionary}: any) => {
     const model: AppMenuItem[] = [
         {
             label: dictionary.sidebar.home.title,
-            items: [{ label: dictionary.sidebar.home.dashboard, icon: 'pi pi-fw pi-home', to: '/' }]
+            items: [{ label: dictionary.sidebar.home.dashboard, icon: 'pi pi-fw pi-home', to: `/${lang}/` }]
+        },
+        {
+            label: dictionary.sidebar.listings.title,
+            items: [
+                {label: dictionary.sidebar.listings.list, icon: 'pi pi-fw pi-list', to: `/${lang}/listings`},
+            ]
         },
         {
             label: dictionary.sidebar.categories.title,
             items: [
-                {label: dictionary.sidebar.categories.list, icon: 'pi pi-fw pi-list', to: '/categories'},
-                    {label: dictionary.sidebar.categories.create, icon: 'pi pi-fw pi-plus', to: '/categories/create'}
+                {label: dictionary.sidebar.categories.list, icon: 'pi pi-fw pi-list', to: `/${lang}/categories`},
+                    {label: dictionary.sidebar.categories.create, icon: 'pi pi-fw pi-plus', to: `/${lang}/categories/create`}
             ]
         },
         {
             label: dictionary.sidebar.subcategories.title,
             items: [
-                {label: dictionary.sidebar.subcategories.list, icon: 'pi pi-fw pi-list', to: '/subcategories'},
-                {label: dictionary.sidebar.subcategories.create, icon: 'pi pi-fw pi-plus', to: '/subcategories/create'}
+                {label: dictionary.sidebar.subcategories.list, icon: 'pi pi-fw pi-list', to: `/${lang}/subcategories`},
+                {label: dictionary.sidebar.subcategories.create, icon: 'pi pi-fw pi-plus', to: `/${lang}/subcategories/create`}
             ]
         },
         {
             label: dictionary.sidebar.items.title,
             items: [
-                {label: dictionary.sidebar.items.create, icon: 'pi pi-fw pi-plus', to: '/items/create'}
+                {label: dictionary.sidebar.items.create, icon: 'pi pi-fw pi-plus', to: `/${lang}/items/create`}
             ]
         },
         {
             label: dictionary.sidebar.ads.title,
             items: [
-                {label: dictionary.sidebar.ads.list, icon: 'pi pi-fw pi-list', to: '/ads'},
-                {label: dictionary.sidebar.ads.carouselAds, icon: 'pi pi-fw pi-plus', to: '/ads/carousel'},
-                {label: dictionary.sidebar.ads.create, icon: 'pi pi-fw pi-plus', to: '/ads/create'}
+                {label: dictionary.sidebar.ads.list, icon: 'pi pi-fw pi-list', to: `/${lang}/ads`},
+                {label: dictionary.sidebar.ads.carouselAds, icon: 'pi pi-fw pi-plus', to: `/${lang}/ads/carousel`},
+                {label: dictionary.sidebar.ads.create, icon: 'pi pi-fw pi-plus', to: `/${lang}/ads/create`}
             ]
         },
         {

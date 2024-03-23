@@ -145,6 +145,12 @@ export default function CategoriesList({lang}) {
                     sortable
                     filter
                 />
+                <Column
+                    field={"formType"}
+                    header={lang === 'en' ? 'Form Type' : 'نوع النموذج'}
+                    sortable
+                    filter
+                />
 
                 <Column
                     field={'_id'}

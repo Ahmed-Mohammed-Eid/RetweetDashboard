@@ -85,6 +85,46 @@ a[href="/login"]{
     transform: scale(0.95);
 }
 
+.blockButton{
+    background-color: #f0ad4e;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+    border: 0;
+}
+
+.blockButton:hover{
+    background-color: #ec971f;
+    color: #fff;
+}
+
+.blockButton:active{
+    transform: scale(0.95);
+}
+
+.unblockButton{
+    background-color: #5cb85c;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+    border: 0;
+}
+
+.unblockButton:hover{
+    background-color: #449d44;
+    color: #fff;
+}
+
+.unblockButton:active{
+    transform: scale(0.95);
+}
+
+
+
 /*RESET THE SIZE OF THE CUSTOM FILE UPLOAD*/
 .p-fluid .p-fileupload .p-button {
     width: 3rem !important;
